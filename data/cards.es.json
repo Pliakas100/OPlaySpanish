@@ -1,5 +1,13 @@
 {
     "version": 1,
     "updated": "2026-10-06",
-    "cards": {}
+    "cards": {
+        "OP18-001": {
+            "name": "Karoo",
+            "effect": "Todos tus Personajes con los tipos {Animal} y {Alabasta} obtienen [Rush] y +1000 de poder. [Once Per Turn] Cuando un Personaje de tipo {Alabasta} tuyo sea K.O., roba 1 carta.",
+            "en": {
+                "effect": "All of your Characters with both the {Animal} and {Alabasta} types gain [Rush] and +1000 power. [Once Per Turn] When your {Alabasta} type Character is K.O.'d, draw 1 card."
+            }
+        }
+    }
 }
