@@ -1,0 +1,33 @@
+{
+    "manifest_version": 3,
+    "name": "OPlay en Español",
+    "version": "0.1.0",
+    "description": "Muestra el efecto de las cartas de One Piece Card Game de oplaytcg.com traducido al español.",
+    "permissions": [
+        "storage"
+    ],
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://oplaytcg.com/*"
+            ],
+            "js": [
+                "src/content.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "data/cards.es.json"
+            ],
+            "matches": [
+                "https://oplaytcg.com/*"
+            ]
+        }
+    ]
+}

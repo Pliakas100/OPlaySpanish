@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>OPlay en Español</title>
+    <style>
+        body { font: 13px system-ui, sans-serif; width: 280px; margin: 0; padding: 12px; color: #222; }
+        h1 { font-size: 15px; margin: 0 0 8px; }
+        label { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; }
+        select { font: inherit; }
+        button { font: inherit; width: 100%; margin-top: 8px; padding: 6px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 8px; max-height: 200px; overflow: auto; white-space: pre-wrap; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h1>OPlay en Español</h1>
+    <label>Activa <input type="checkbox" id="enabled"></label>
+    <label>Mostrar al
+        <select id="mode">
+            <option value="hover">Pasar el ratón</option>
+            <option value="click">Hacer click</option>
+        </select>
+    </label>
+    <label>Logs en consola <input type="checkbox" id="debug"></label>
+    <button id="analyze" type="button">Analizar esta página</button>
+    <pre id="out" hidden></pre>
+    <script src="popup.js"></script>
+</body>
+</html>
