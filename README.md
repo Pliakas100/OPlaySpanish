@@ -37,3 +37,17 @@ Al pasar el ratón (o hacer click) sobre una carta aparece su traducción.
 ```
 
 `[Palabra]` se muestra como palabra clave y `{Tipo}` en cursiva.
+
+## Pipeline del diccionario
+
+Todo sale de `npm run …` (Node 18+, sin dependencias). La caché va a `.cache/` (ignorada por git).
+
+1. `npm run extract`: descarga la ficha en inglés de cada carta, a 1 petición por segundo.
+   Es reanudable: lo ya descargado no se vuelve a pedir.
+2. `npm run batches`: reúne los textos únicos y los reparte en lotes de 120 en `.cache/en/batches/`.
+3. Traducir cada lote con `scripts/translate-prompt.md` y `scripts/glossary.es.json`.
+   Las salidas van a `.cache/en/translations/`.
+4. `npm run merge`: valida que cada texto tenga traducción y que `[Palabra]` / `{Tipo}` se conserven,
+   y escribe `data/cards.es.json`. Si hay errores no escribe nada.
+
+Tests: `npm test`.

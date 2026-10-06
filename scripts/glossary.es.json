@@ -1,0 +1,32 @@
+{
+    "keep_english": [
+        "Rush", "Blocker", "Double Attack", "Banish", "Unblockable", "Counter", "Trigger",
+        "Once Per Turn", "On Play", "When Attacking", "On K.O.", "Main", "DON!!", "K.O.",
+        "Animal", "Alabasta"
+    ],
+    "terms": {
+        "Character": "Personaje",
+        "Characters": "Personajes",
+        "Leader": "Líder",
+        "Event": "Evento",
+        "Events": "Eventos",
+        "Stage": "Escenario",
+        "Life": "Vida",
+        "power": "poder",
+        "cost": "coste",
+        "deck": "mazo",
+        "hand": "mano",
+        "trash": "descarte",
+        "draw": "robar",
+        "rested": "descansado",
+        "active": "activo",
+        "rest": "descansar",
+        "your opponent": "tu oponente",
+        "your Leader": "tu Líder"
+    },
+    "notes": [
+        "Las palabras clave entre corchetes y los tipos entre llaves se copian tal cual, sin traducir.",
+        "Los nombres propios de personajes y lugares no se traducen.",
+        "Español neutro, tuteo (tú), sin voseo."
+    ]
+}
