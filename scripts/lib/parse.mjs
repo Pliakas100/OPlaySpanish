@@ -14,6 +14,7 @@ const KEYWORD_FIXUPS = {
     '[Activate Main]': '[Activate: Main]',
     '[Active:Main]': '[Activate: Main]',
     '[Rush:Character]': '[Rush: Character]',
+    '(Supernovas) type': '{Supernovas} type', // EB05-001: tipo entre paréntesis en vez de llaves
 };
 
 export function decodeEntities(text) {

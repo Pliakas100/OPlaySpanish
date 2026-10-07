@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { cardFromHtml, sectionText } from '../lib/parse.mjs';
-import { sameTokens, tokensOf } from '../lib/tokens.mjs';
+import { repairTokens, sameTokens, tokensOf } from '../lib/tokens.mjs';
 
 // Fragmentos reales (recortados) de la estructura que genera el sitio.
 const KAROO_HTML = `
@@ -44,4 +44,14 @@ test('tokensOf y sameTokens comprueban los marcadores', () => {
     assert.deepEqual(tokensOf('Gana [Rush] y {Animal}.'), ['[Rush]', '{Animal}']);
     assert.equal(sameTokens('Gana [Rush] y {Animal}.', 'Obtiene [Rush] y {Animal}.'), true);
     assert.equal(sameTokens('Gana [Rush].', 'Obtiene [Acometida].'), false);
+});
+
+test('repairTokens restaura el marcador traducido cuando el número coincide', () => {
+    const en = "[Your Turn] This Character gains [Double Attack].";
+    const es = 'Este Personaje gana [Doble Ataque] en [Tu turno].'; // orden distinto, mismo nº
+    assert.equal(repairTokens(en, es), 'Este Personaje gana [Your Turn] en [Double Attack].');
+});
+
+test('repairTokens devuelve null si el número de marcadores no coincide', () => {
+    assert.equal(repairTokens('Gana [Rush] y {Animal}.', 'Obtiene algo.'), null);
 });

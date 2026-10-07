@@ -5,7 +5,7 @@ import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { sameTokens } from './lib/tokens.mjs';
+import { sameTokens, repairTokens } from './lib/tokens.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CACHE = join(ROOT, '.cache', 'en');
@@ -23,10 +23,19 @@ for (const name of (await readdir(dir)).filter((f) => f.endsWith('.json'))) {
 }
 
 const problems = [];
+const resolved = {}; // texto final por clave, una vez reparados los marcadores que se pudieran traducir
+let repaired = 0;
 for (const [key, en] of Object.entries(strings)) {
     const es = translations[key];
-    if (!es?.trim()) problems.push({ key, en, problem: 'sin traducción' });
-    else if (!sameTokens(en, es)) problems.push({ key, en, es, problem: 'marcadores distintos' });
+    if (!es?.trim()) {
+        problems.push({ key, en, problem: 'sin traducción' });
+    } else if (sameTokens(en, es)) {
+        resolved[key] = es;
+    } else {
+        const fixed = repairTokens(en, es);
+        if (fixed === null) problems.push({ key, en, es, problem: 'número de marcadores distinto' });
+        else { resolved[key] = fixed; repaired++; }
+    }
 }
 
 if (problems.length) {
@@ -34,9 +43,10 @@ if (problems.length) {
     console.error(`${problems.length} textos con problemas (ver .cache/en/merge-problems.json). No se ha escrito nada.`);
     process.exit(1);
 }
+if (repaired) console.log(`${repaired} textos con [Palabra]/{Tipo} traducidos por error: corregidos automáticamente.`);
 
 const keyByText = Object.fromEntries(Object.entries(strings).map(([key, text]) => [text, key]));
-const esFor = (text) => (text ? translations[keyByText[text]] : undefined);
+const esFor = (text) => (text ? resolved[keyByText[text]] : undefined);
 
 const out = {};
 for (const [id, card] of Object.entries(cards)) {
