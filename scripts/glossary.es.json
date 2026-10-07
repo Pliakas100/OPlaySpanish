@@ -18,15 +18,16 @@
         "hand": "mano",
         "trash": "descarte",
         "draw": "robar",
-        "rested": "descansado",
+        "rested": "girado",
         "active": "activo",
-        "rest": "descansar",
+        "rest": "girar",
         "your opponent": "tu oponente",
         "your Leader": "tu Líder"
     },
     "notes": [
         "Las palabras clave entre corchetes y los tipos entre llaves se copian tal cual, sin traducir.",
         "Los nombres propios de personajes y lugares no se traducen.",
-        "Español neutro, tuteo (tú), sin voseo."
+        "Español neutro, tuteo (tú), sin voseo.",
+        "«Rest» es la mecánica de girar la carta de lado (no «descansar»): úsese «girar»/«gira»/«girado»."
     ]
 }
