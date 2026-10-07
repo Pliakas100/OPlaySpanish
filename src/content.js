@@ -4,8 +4,17 @@
 (() => {
     const ID_RE = /(?<![A-Za-z0-9])((?:PRB|OP|ST|EB)\d{2}|P)-(\d{3})(?!\d)/;
     const TOKEN_RE = /\[([^\]]+)\]|\{([^}]+)\}/g;
-    const ABILITY_KEYWORDS = new Set(['Rush', 'Blocker', 'Double Attack', 'Banish', 'Unblockable']);
-    const TIMING_KEYWORDS = new Set(['On Play', 'When Attacking', 'On K.O.', 'Main', 'Counter', 'Trigger']);
+    // Catálogo real (texto + color) sacado del HTML del sitio: ver scripts/lib/keywords.mjs.
+    // Lo que no esté aquí —referencias a otra carta por su nombre, p. ej. [Monkey.D.Luffy]—
+    // cae en la clase .kw neutra, que es lo que toca: no es ni habilidad ni momento.
+    const ABILITY_KEYWORDS = new Set([
+        'Blocker', 'Rush', 'Rush: Character', 'Double Attack', 'Banish', 'Unblockable',
+    ]);
+    const TIMING_KEYWORDS = new Set([
+        'On Play', 'Activate: Main', 'Main', 'When Attacking', 'On K.O.', 'Your Turn',
+        "Opponent's Turn", "On Your Opponent's Attack", 'End of Your Turn', 'On Block',
+        'Once Per Turn', 'Trigger',
+    ]);
     const MAX_ANCESTORS = 6;
     const HIDE_DELAY_MS = 200;
     const HOST_ID = 'oplay-es-host';
@@ -210,9 +219,13 @@
             body.append(trigger);
         }
 
-        const effect = make('p', 'effect');
-        renderEffect(card.effect ?? '', effect);
-        body.append(effect);
+        if (card.effect) {
+            const effect = make('p', 'effect');
+            renderEffect(card.effect, effect);
+            body.append(effect);
+        } else if (!card.trigger) {
+            body.append(make('p', 'muted', 'Esta carta no tiene efecto.'));
+        }
 
         if (card.en?.effect) {
             const details = make('details');

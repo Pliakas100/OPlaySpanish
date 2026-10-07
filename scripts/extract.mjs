@@ -7,6 +7,9 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { cardFromHtml } from './lib/parse.mjs';
+import { KNOWN_KEYWORDS } from './lib/keywords.mjs';
+
+const TOKEN_RE = /\[([^\]]+)\]/g;
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CACHE = join(ROOT, '.cache', 'en');
@@ -85,10 +88,26 @@ async function main() {
         if ((i + 1) % 100 === 0) console.log(`${i + 1}/${ids.length}`);
     }
 
-    const suspicious = Object.entries(cards).filter(([, c]) => c.suspicious).map(([id]) => id);
+    // Palabras clave en [corchetes] que no están en el catálogo conocido: revisar a mano.
+    const unknownKeywords = new Map();
+    for (const [id, card] of Object.entries(cards)) {
+        for (const text of [card.effect, card.trigger]) {
+            for (const m of text.matchAll(TOKEN_RE)) {
+                if (!KNOWN_KEYWORDS.has(m[1])) {
+                    if (!unknownKeywords.has(m[1])) unknownKeywords.set(m[1], []);
+                    unknownKeywords.get(m[1]).push(id);
+                }
+            }
+        }
+    }
+
     await writeFile(join(CACHE, 'cards.en.json'), JSON.stringify(cards, null, 2));
-    await writeFile(join(CACHE, 'report.json'), JSON.stringify({ ok: Object.keys(cards).length, errors, suspicious }, null, 2));
-    console.log(`ok ${Object.keys(cards).length} · errores ${errors.length} · revisar ${suspicious.length}`);
+    await writeFile(join(CACHE, 'report.json'), JSON.stringify({
+        ok: Object.keys(cards).length,
+        errors,
+        unknownKeywords: Object.fromEntries(unknownKeywords),
+    }, null, 2));
+    console.log(`ok ${Object.keys(cards).length} · errores ${errors.length} · palabras clave desconocidas ${unknownKeywords.size}`);
 }
 
 main().catch((err) => {
