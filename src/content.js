@@ -36,7 +36,7 @@
         .muted { color: #777; }
     `;
 
-    let settings = { enabled: true, mode: 'hover', debug: false, panelPos: null };
+    let settings = { enabled: true, mode: 'hover', debug: false, panelPos: null, alwaysOn: false };
     let cardsPromise = null;
     let host = null;
     let shadowRoot = null;
@@ -252,14 +252,19 @@
 
     function hide({ force = false } = {}) {
         clearTimeout(hideTimer);
-        if (!host || (pinned && !force)) return;
+        if (!host || ((pinned || settings.alwaysOn) && !force)) return;
         if (force) setPinned(false);
         host.style.display = 'none';
         currentId = null;
     }
 
     function scheduleHide() {
-        if (settings.mode !== 'hover') return;
+        if (settings.mode !== 'hover' || settings.alwaysOn) return;
+        // Antes no se cancelaba el temporizador anterior: si el ratón pasaba por
+        // un hueco sin ID dos veces seguidas (p. ej. un borde o un overlay de la
+        // carta), quedaba un hideTimer "huérfano" que ocultaba el panel más tarde
+        // aunque show() ya hubiera cancelado el último. Por eso parpadeaba.
+        clearTimeout(hideTimer);
         hideTimer = setTimeout(() => hide(), HIDE_DELAY_MS);
     }
 
@@ -309,7 +314,7 @@
         if (!settings.enabled) hide({ force: true });
     });
 
-    chrome.storage.local.get(['enabled', 'mode', 'debug', 'panelPos']).then((stored) => {
+    chrome.storage.local.get(['enabled', 'mode', 'debug', 'panelPos', 'alwaysOn']).then((stored) => {
         settings = { ...settings, ...stored };
         document.addEventListener('pointerover', onPointer, true);
         document.addEventListener('click', onPointer, true);

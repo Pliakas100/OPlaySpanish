@@ -1,14 +1,16 @@
 const $ = (id) => document.getElementById(id);
 
 async function init() {
-    const settings = await chrome.storage.local.get({ enabled: true, mode: 'hover', debug: false });
+    const settings = await chrome.storage.local.get({ enabled: true, mode: 'hover', debug: false, alwaysOn: false });
     $('enabled').checked = settings.enabled;
     $('mode').value = settings.mode;
+    $('alwaysOn').checked = settings.alwaysOn;
     $('debug').checked = settings.debug;
 }
 
 $('enabled').addEventListener('change', (e) => chrome.storage.local.set({ enabled: e.target.checked }));
 $('mode').addEventListener('change', (e) => chrome.storage.local.set({ mode: e.target.value }));
+$('alwaysOn').addEventListener('change', (e) => chrome.storage.local.set({ alwaysOn: e.target.checked }));
 $('debug').addEventListener('change', (e) => chrome.storage.local.set({ debug: e.target.checked }));
 
 $('analyze').addEventListener('click', async () => {
